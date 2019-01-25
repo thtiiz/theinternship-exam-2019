@@ -23,8 +23,9 @@ def printInfo(guess, wrong, score, streak, word, hint):
     print('\tscore: ', end = '')
     print("%.2f" %score, end = '')
     print('\tstreak: ', str(streak), end='')
-    print('\tremain wrong guess: ' + str(len(word) - len(wrong)))
-    print('\t\tWrong guessed: ', end = '')
+    print('\tremain wrong guess: ' + str(6 - len(wrong)))
+    print(open('data/draw/' + str(len(wrong)) + '.txt', 'r').read())
+    print('Wrong guessed: ', end = '')
     for i in wrong:
         print(i, end = ' ')
     print('')
@@ -44,7 +45,7 @@ def main(catagoryList, score):
         print("Welcome to my Hangman game\nSelect Category:")
         for i in range (0, len(categoryList)):
             print(str(i+1) + '. ' + categoryList[i])
-        selectCategory = int(input('Type No: ')) - 1
+        selectCategory = int(input('Select(1-'+str(len(catagoryList))+'):')) - 1
         wordList = open('data/category/' + catagoryList[selectCategory] + '.txt', 'r').read().split('\n')
         index = random.randint(0, len(wordList) - 1)  # minus 1 becuase index
         word = wordList[index]
@@ -53,7 +54,7 @@ def main(catagoryList, score):
         guess = initialGuess(word)
         wrong = []
         streak = 0
-        while(''.join(guess) != word and len(wrong) <= len(word)):
+        while(''.join(guess) != word and len(wrong) < 6):
             printInfo(guess, wrong, score, streak, word, hint)
             inp = input("\n> ").lower()
             if(inp == word):
