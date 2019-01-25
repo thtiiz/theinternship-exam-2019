@@ -1,0 +1,14 @@
+shark
+giraffe
+alligator
+camel
+cat
+deer
+elephant
+goat
+fly
+kangaroo
+penguin
+rabbit
+snake
+zebra

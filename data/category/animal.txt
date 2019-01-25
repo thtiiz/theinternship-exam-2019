@@ -1,0 +1,14 @@
+alligator
+buffalo
+butterfly
+camel
+cheetah
+dinosaur
+cobra
+monkey
+mosquito
+rabbit
+seahorse
+squid
+turtle
+flamingo
