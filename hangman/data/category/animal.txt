@@ -1,6 +1,6 @@
 alligator
 buffalo
-butterfly
+fly
 camel
 cheetah
 dinosaur
@@ -9,6 +9,6 @@ monkey
 mosquito
 rabbit
 seahorse
-squid
+octopus
 turtle
 flamingo

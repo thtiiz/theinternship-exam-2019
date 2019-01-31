@@ -1,0 +1,33 @@
+{
+    "animal" : 
+    {
+        "alligator":"reptile",
+        "buffalo":"black",
+        "fly":"everywhere",
+        "camel":"desert",
+        "cheetah":"fastest run",
+        "dinosaur":"million years ago",
+        "cobra":"poison",
+        "monkey":"banana",
+        "mosquito":"blood",
+        "rabbit":"fibonacci",
+        "seahorse":"underwater",
+        "octopus":"expulsion of ink",
+        "turtle":"green",
+        "flamingo":"pink"
+    },
+    "movie" : {
+        "avenger endgame":"Hero movie comming in April", 
+        "the fast of the furious":"racing",
+        "aquaman":"DC",
+        "inception":"dream in a dream",
+        "A Quiet Place":"don't speak"
+    },
+    "sport": {
+        "football":"Ronaldo",
+        "basketball":"Lebron james",
+        "swimming":"Michael Fred Phelps",
+        "running":"faster than walk",
+        "tennis":"NTL"
+    }
+}

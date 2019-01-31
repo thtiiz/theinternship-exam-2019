@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
+<current>
   <city id="2643741" name="City of London">
     <coord lon="-0.09" lat="51.51" />
     <country>GB</country>
@@ -17,3 +17,4 @@
   <precipitation mode="no" />
   <weather number="800" value="Sky is Clear" icon="01d" />
   <lastupdate value="2015-06-30T08:36:14" />
+</current>

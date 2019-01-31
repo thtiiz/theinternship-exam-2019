@@ -45,7 +45,9 @@ def main(catagoryList, score):
         print("Welcome to my Hangman game\nSelect Category:")
         for i in range (0, len(categoryList)):
             print(str(i+1) + '. ' + categoryList[i])
-        selectCategory = int(input('Select(1-'+str(len(catagoryList))+'):')) - 1
+        selectCategory = int(input('Select(1-'+str(len(catagoryList))+'): ')) - 1
+        if(selectCategory <= 0 or selectCategory >= len(catagoryList)):
+            continue
         wordList = open('data/category/' + catagoryList[selectCategory] + '.txt', 'r').read().split('\n')
         index = random.randint(0, len(wordList) - 1)  # minus 1 becuase index
         word = wordList[index]
