@@ -1,9 +1,18 @@
 import re
 import sys
+import json
+#### Using Tree structure ####
+def GetData(data):
+    pattern = r'(\s\w+=)|(<)|(>)'
+    rawData = []
+    for i in data:
+        if("<?" not in i):
+            x = re.split(pattern, i)
+            rawData.append(x)
+    return rawData
 
-def GetData(rawData):
+def DataFilter(rawData):
     data = []
-    stack = []
     for i in rawData:
         temp = []
         for j in i:
@@ -13,88 +22,48 @@ def GetData(rawData):
                     if(j[-1]==' '):
                         j = j[0:len(j)-2]
                     temp.append(j)
-        if(temp[0]!='/'):
-            stack.append(temp[0])
-        else:
-            stack.append(temp[1])
         data.append(temp)
-    return (data,stack)
+    return data
 
-def WriteData(key, value, tab, f):
-    f.write("\t" * tab + key + ': ' + value)
+def CleanData(data):
+    return re.sub(r'"|(\s\/)|(^\s)|(\s$)', '', data)
 
-def Case1(i, f, tab):
-    if(i[0]!='/'):
-        WriteData('"'+ i[0] +'"', '{\n', tab, f)
-    tab+=1
-    for j in range (1, len(i)-1, 2):
-        i[j] = re.sub(r' ', '', i[j])
-        i[j+1] = re.sub(r'"', '', i[j+1])
-        WriteData('"'+ i[j] +'"', '"'+ i[j+1] +'"', tab, f)
-        if(j!=len(i)-3): 
-            f.write(',')
-        f.write("\n")
-    tab -=1
-def match(stack):
-    if(stack[len(stack)-1] in stack[0:len(stack)-2]):
-        stack.pop()
-        return True
-    else:
-        return False
-def WriteFile(i, tab, data, node, f, stack):
-    if(i>=len(data)): #out of range
-        return 0
-    ################### Append
-    if(node):
-        if(node[0] == '/'):
-            node.pop(0)
-        stack.append(node[0])
-        node.pop(0)
-        # print(stack)
-    ##################
-    if(match(stack)):
-        tab-=1
-        f.write("\t"*tab + '}')
-        if(i<len(data)-1):
-            f.write(',\n')
+def GetAtt(data,i):
+    att = {}
+    keyi = 1
+    while(keyi<len(data[i[0]])):
+        att[CleanData(data[i[0]][keyi])] = CleanData(data[i[0]][keyi+1])
+        keyi += 2
+    return att
+
+def createNode(node, data, i=[0], att=0): #use array i because pass by reference
+    newNode = {}
+    while(i[0]<len(data)):
+        thisnode = data[i[0]][0]
+        if(not '/' in data[i[0]][-1]): #new Node
+            att = GetAtt(data, i)
+            i[0]+=1
+            newNode[thisnode] = createNode(thisnode, data, i)
+            if(att):
+                mergeAtt = {**att, **newNode[thisnode]} # merge
+                newNode[thisnode] = mergeAtt
+                att = 0
+        elif('/' in data[i[0]][-1] and i[0]<len(data) and len(data[i[0]])>1):
+            if(len(data[i[0]]) == 3 and data[i[0]][-1][-1] != '/'): # 1att or 1 value
+                newNode[thisnode] = data[i[0]][1]
+            else:
+                att = GetAtt(data, i)
+                newNode[thisnode] = att
         else:
-            f.write('\n')
-        tab-=1
-        
-    if(data[i][-1] == '/'):
-        Case1(data[i][0:len(data)-1], f, tab)
-        f.write("\t"*tab + '}')
-        if(not node):
-            end = 1
-        elif(node[0] in stack):
-            end = 1
-        else:
-            end = 0
-        if(i < len(data)-1 and not end):
-            f.write(',\n')
-        else:
-            f.write('\n')
-    elif(len(data[i])==4):
-        WriteData('"'+ data[i][0] +'"', '"'+ data[i][1] + '",\n', tab, f)
-    else:
-        Case1(data[i][0:len(data)-1], f, tab)
-        tab+=1
-    WriteFile(i+1, tab, data, node, f, stack)
+            return newNode
+        i[0]+=1
+    return newNode
 
 inFile = sys.argv[1]
 with open(inFile, 'r') as f:  
     data = [x.strip() for x in f.readlines()]
-pattern = r'(\s\w+=)|(<)|(>)|(\/)'
-rawData = []
-for i in data:
-    if("<?" not in i):
-        x = re.split(pattern, i)
-        rawData.append(x)
-(data, stack) = GetData(rawData)
-print(data)
-stack.pop(0)
-stack.pop(len(stack)-1)
-f = open("o.json", 'w+')
-f.write('{\n')
-WriteFile(1, 1, data, stack, f, [])
-f.write('}')
+rawData = GetData(data)
+data = DataFilter(rawData)
+tree = createNode(data[0][0], data)
+with open(re.sub('.xml', '.json', inFile), 'w') as f: #write dict to json
+    json.dump(tree, f, indent = 4)
