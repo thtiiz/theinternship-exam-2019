@@ -8,10 +8,13 @@
 - Terminal
 ## RUN
 ```
-python XmlToJson.py weather.xml
+python XmlToJson.py [FilePath]
 ```
 > You will get filename.json by run this program
 ## Example
+```
+python XmlToJson.py weather.xml
+```
 ![Example picture](https://i.imgur.com/6XVlc1j.png)
 
 ## Reference
